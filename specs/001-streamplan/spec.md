@@ -116,11 +116,15 @@ Streamers can record notes after a session about what worked, what did not, and 
 - **POST /api/auth/signup**: Create a new user account.
 - **POST /api/auth/login**: Authenticate a user and create a session.
 - **POST /api/auth/logout**: End the current user session.
-- **GET /api/games**: Retrieve all games for the authenticated user.
-- **POST /api/games**: Create a new game entry.
-- **GET /api/games/:id**: Retrieve a specific game.
-- **PUT /api/games/:id**: Update a specific game.
-- **DELETE /api/games/:id**: Delete a specific game.
+- **GET /api/type**: Retrieve all types for the authenticated user.
+- **POST /api/type**: Create a new entry.
+- **GET /api/type/:id**: Retrieve a specific type.
+- **PUT /api/type/:id**: Update a specific type.
+- **DELETE /api/type/:id**: Delete a specific type.
+- **POST /api/type/{genre}**: Add type by genre
+- **GET /api/type/{genre}**: Filter by genre of streaming content (Games, Chatting, etc.)
+- **PUT /api/type/{genre}**: Update type by genre
+- **DELETE /api/type/{genre}**: Delete type by genre.
 - **GET /api/sessions**: Retrieve all sessions for the authenticated user.
 - **POST /api/sessions**: Create a new session.
 - **GET /api/sessions/:id**: Retrieve a specific session.
