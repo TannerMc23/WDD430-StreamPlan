@@ -10,3 +10,4 @@ A session-planning tool for hobby streamers to schedule streams, manage a game l
 StreamPlan development follows the project constitution: strict TypeScript, Tailwind-first UI design, Next.js App Router discipline, real testing, and collaborative review.
 
 <!-- This is a test -->
+<!-- This is also a test. -->
