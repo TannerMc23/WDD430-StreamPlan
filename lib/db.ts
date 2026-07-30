@@ -63,7 +63,13 @@ let schemaReady: Promise<void> | null = null;
 // Draft schema — Tanner and Kelsey still need to review the users/types/genres tables.
 export function ensureSchema() {
   if (!schemaReady) {
-    schemaReady = pool.query(SCHEMA_SQL).then(() => undefined);
+    schemaReady = pool.query(SCHEMA_SQL).then(
+      () => undefined,
+      (err) => {
+        schemaReady = null; // retry next call instead of caching the failure forever
+        throw err;
+      }
+    );
   }
   return schemaReady;
 }
