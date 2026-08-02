@@ -2,9 +2,9 @@ import TypeCard from "@/components/TypeCard";
 
 interface StreamType {
   id: number;
-  title: string;
-  cover_image_url: string | null;
-  status: "active" | "retired";
+  name: string;
+  notes: string | null;
+  status: "Active" | "Retired";
 }
 
 async function getTypes(): Promise<StreamType[]> {
@@ -33,8 +33,8 @@ export default async function TypesPage() {
               <TypeCard
                 key={type.id}
                 id={type.id}
-                title={type.title}
-                coverImageUrl={type.cover_image_url}
+                name={type.name}
+                notes={type.notes}
                 status={type.status}
               />
             ))}

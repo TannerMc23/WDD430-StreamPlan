@@ -1,12 +1,12 @@
 import { NextRequest, NextResponse } from "next/server";
-import { sql } from "@/lib/db";
+import { pool } from "@/lib/db";
 
 export async function GET(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
   const { id } = await params;
-  const { rows } = await sql`SELECT * FROM types WHERE id = ${id}`;
+  const { rows } = await pool.query("SELECT * FROM types WHERE id = $1", [id]);
   if (rows.length === 0) {
     return NextResponse.json({ error: "Type not found" }, { status: 404 });
   }
@@ -19,12 +19,10 @@ export async function PUT(
 ) {
   const { id } = await params;
   const body = await request.json();
-  const { rows } = await sql`
-    UPDATE types
-    SET title = ${body.title}, cover_image_url = ${body.coverImageUrl ?? null}, status = ${body.status}
-    WHERE id = ${id}
-    RETURNING *;
-  `;
+  const { rows } = await pool.query(
+    `UPDATE types SET name = $1, notes = $2, status = $3 WHERE id = $4 RETURNING *`,
+    [body.name, body.notes ?? null, body.status, id]
+  );
   if (rows.length === 0) {
     return NextResponse.json({ error: "Type not found" }, { status: 404 });
   }
@@ -36,7 +34,7 @@ export async function DELETE(
   { params }: { params: Promise<{ id: string }> }
 ) {
   const { id } = await params;
-  const { rows } = await sql`DELETE FROM types WHERE id = ${id} RETURNING *;`;
+  const { rows } = await pool.query("DELETE FROM types WHERE id = $1 RETURNING *", [id]);
   if (rows.length === 0) {
     return NextResponse.json({ error: "Type not found" }, { status: 404 });
   }

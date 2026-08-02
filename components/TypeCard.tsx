@@ -11,9 +11,9 @@ const genreStyles: Record<Genre, { color: string; label: string }> = {
 
 interface TypeCardProps {
   id: number;
-  title: string;
-  coverImageUrl?: string | null;
-  status: "active" | "retired";
+  name: string;
+  notes?: string | null;
+  status: "Active" | "Retired";
   genres?: Genre[];
   onEdit?: (id: number) => void;
   onDelete?: (id: number) => void;
@@ -21,8 +21,8 @@ interface TypeCardProps {
 
 export default function TypeCard({
   id,
-  title,
-  coverImageUrl,
+  name,
+  notes,
   status,
   genres = [],
   onEdit,
@@ -31,22 +31,18 @@ export default function TypeCard({
   return (
     <div className="bg-[#242428] rounded-lg p-4 border border-zinc-700 hover:border-accent transition">
       <div className="flex items-center justify-between mb-3">
-        <h3 className="text-white font-semibold text-lg">{title}</h3>
+        <h3 className="text-white font-semibold text-lg">{name}</h3>
         <span
           className={`text-xs px-2 py-1 rounded ${
-            status === "active" ? "bg-accent text-white" : "bg-zinc-600 text-zinc-300"
+            status === "Active" ? "bg-accent text-white" : "bg-zinc-600 text-zinc-300"
           }`}
         >
           {status}
         </span>
       </div>
 
-      {coverImageUrl && (
-        <img
-          src={coverImageUrl}
-          alt={title}
-          className="w-full h-32 object-cover rounded mb-3"
-        />
+      {notes && (
+        <p className="text-zinc-400 text-sm mb-3 line-clamp-2">{notes}</p>
       )}
 
       {genres.length > 0 && (
