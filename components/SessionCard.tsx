@@ -1,10 +1,14 @@
+import Link from "next/link";
 import { SessionRow } from "@/lib/db";
 
 export default function SessionCard({ session }: { session: SessionRow }) {
   const date = new Date(session.scheduled_date).toLocaleString();
 
   return (
-    <div className="rounded-lg border border-white/10 bg-white/5 p-4">
+    <Link
+      href={`/sessions/${session.id}`}
+      className="block rounded-lg border border-white/10 bg-white/5 p-4 transition hover:bg-white/10"
+    >
       <div className="flex items-center justify-between">
         <h3 className="font-semibold">{session.title}</h3>
         <span className="rounded-full bg-white/10 px-2 py-0.5 text-xs uppercase">
@@ -15,6 +19,6 @@ export default function SessionCard({ session }: { session: SessionRow }) {
       {session.notes && (
         <p className="mt-2 text-sm text-foreground/80">{session.notes}</p>
       )}
-    </div>
+    </Link>
   );
 }
