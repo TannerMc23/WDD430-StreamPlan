@@ -1,3 +1,4 @@
+
 import { Pool } from "pg";
 import { SessionStatus } from "./types";
 
@@ -73,3 +74,4 @@ export function ensureSchema() {
   }
   return schemaReady;
 }
+
