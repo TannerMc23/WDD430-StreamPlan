@@ -14,14 +14,25 @@ export async function POST(request: NextRequest) {
   if (!body.name) {
     return NextResponse.json({ error: "Name is required" }, { status: 400 });
   }
+  if (!body.userId) {
+    return NextResponse.json({ error: "User ID is required" }, { status: 400 });
+  }
 
-  // TODO: replace hardcoded user_id once session-based auth is wired to real user lookups
-  const { rows } = await pool.query(
-    `INSERT INTO types (user_id, name, notes, status)
-     VALUES ($1, $2, $3, $4)
-     RETURNING *`,
-    [body.userId ?? 1, body.name, body.notes ?? null, body.status ?? "Active"]
-  );
-
-  return NextResponse.json(rows[0], { status: 201 });
+  try {
+    const { rows } = await pool.query(
+      `INSERT INTO types (user_id, name, notes, status)
+       VALUES ($1, $2, $3, $4)
+       RETURNING *`,
+      [body.userId, body.name, body.notes ?? null, body.status ?? "Active"]
+    );
+    return NextResponse.json(rows[0], { status: 201 });
+  } catch (err: any) {
+    if (err.code === "23503") {
+      return NextResponse.json(
+        { error: "That User ID doesn't exist. Check the ID and try again." },
+        { status: 400 }
+      );
+    }
+    return NextResponse.json({ error: "Database is not available yet" }, { status: 503 });
+  }
 }
