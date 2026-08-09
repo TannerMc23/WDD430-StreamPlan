@@ -1,9 +1,13 @@
 // API endpoint that returns the recent sessions.
 
-import { NextRequest, NextResponse } from "next/server";
+import { NextResponse } from "next/server";
 import { pool } from "@/lib/db";
-import { GET } from "@/app/api/sessions/route";
 
-export async function DashboardGET(request: NextRequest) {
-    return GET(request);
+export async function GET() {
+  const { rows } = await pool.query(
+    `SELECT * FROM sessions
+     WHERE status = 'Planned' AND scheduled_date >= NOW()
+     ORDER BY scheduled_date ASC`
+  );
+  return NextResponse.json(rows);
 }
