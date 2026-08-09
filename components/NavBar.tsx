@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { auth, signOut } from "@/lib/auth";
 
 interface NavLinkProps {
     href: string;
@@ -19,13 +20,24 @@ function NavLink({ href, children }: NavLinkProps) {
     );
 }
 
-export default function NavBar() {
+export default async function NavBar() {
+    const session = await auth();
+    const user = session?.user;
+
     return (
         <nav>
             <ul className="flex gap-4 justify-around items-center">
                 <li><NavLink href="/">Home</NavLink></li>
                 <li><NavLink href="/dashboard">Dashboard</NavLink></li>
                 <li><NavLink href="/sessions">All Sessions</NavLink></li>
+                (user && (
+                    <li>
+                        <button onClick={() => signOut()}>Logout</button>
+                    </li>
+                ))
+                (!user && (
+                    <li><NavLink href="/login">Login</NavLink></li>
+                ))
             </ul>
         </nav>
     );
