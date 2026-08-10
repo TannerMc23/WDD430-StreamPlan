@@ -1,6 +1,7 @@
 import NextAuth from "next-auth";
 import Credentials from "next-auth/providers/credentials";
 import bcrypt from "bcryptjs";
+import { pool } from "@/lib/db";
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
   providers: [
@@ -10,18 +11,19 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         password: { label: "Password", type: "password" },
       },
       authorize: async (credentials) => {
-        // TODO: replace with a real lookup once lib/db.ts + the users table exist
-        // const user = await getUserByEmail(credentials.email);
-        // if (!user) return null;
-        // const valid = await bcrypt.compare(credentials.password, user.passwordHash);
-        // if (!valid) return null;
-        // return { id: user.id, name: user.name, email: user.email };
+        if (!credentials?.email || !credentials?.password) return null;
 
-        // Placeholder so the flow is testable before the DB is wired up:
-        if (credentials?.email && credentials?.password) {
-          return { id: "1", email: credentials.email as string };
-        }
-        return null;
+        const result = await pool.query(
+          "SELECT id, email, password_hash FROM users WHERE email = $1",
+          [credentials.email]
+        );
+        const user = result.rows[0];
+        if (!user) return null;
+
+        const valid = await bcrypt.compare(credentials.password as string, user.password_hash);
+        if (!valid) return null;
+
+        return { id: String(user.id), email: user.email };
       },
     }),
   ],
