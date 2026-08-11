@@ -45,9 +45,9 @@ export default async function SessionDetailPage({ params }: Params) {
   return (
     <main className="mx-auto max-w-2xl p-6">
       <div className="rounded-lg border border-white/10 bg-white/5 p-4">
-        <div className="flex items-center justify-between">
-          <h1 className="text-xl font-semibold">{session.title}</h1>
-          <span className="rounded-full bg-white/10 px-2 py-0.5 text-xs uppercase">
+        <div className="flex items-center justify-between gap-2">
+          <h1 className="text-xl font-semibold wrap-break-word">{session.title}</h1>
+          <span className="shrink-0 rounded-full bg-white/10 px-2 py-0.5 text-xs uppercase">
             {session.status}
           </span>
         </div>

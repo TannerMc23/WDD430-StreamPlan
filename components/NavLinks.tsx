@@ -26,8 +26,8 @@ interface NavLinksProps {
 
 export default function NavLinks({ user }: NavLinksProps) {
   return (
-    <nav>
-      <ul className="flex gap-4 justify-around items-center">
+    <nav className="px-4 py-2">
+      <ul className="flex flex-wrap gap-x-4 gap-y-2 justify-center sm:justify-around items-center">
         <li><NavLink href="/">Home</NavLink></li>
         <li><NavLink href="/dashboard">Dashboard</NavLink></li>
         <li><NavLink href="/sessions">All Sessions</NavLink></li>

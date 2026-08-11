@@ -45,16 +45,18 @@ export default function SessionNotesForm({
         placeholder="What worked, what didn't, ideas for next time..."
         className="w-full resize-y rounded-lg border border-white/10 bg-white/5 p-3 text-sm text-foreground placeholder:text-foreground/40 focus:outline-none focus:ring-1 focus:ring-accent"
       />
-      <div className="mt-2 flex items-center gap-3">
+      <div className="mt-2 flex flex-wrap items-center gap-3">
         <button
           onClick={handleSave}
           disabled={state === "saving"}
-          className="rounded-md bg-accent px-3 py-1.5 text-sm font-medium text-white disabled:opacity-50"
+          className="min-h-11 rounded-md bg-accent px-3 py-2 text-sm font-medium text-white disabled:opacity-50"
         >
           {state === "saving" ? "Saving..." : "Save notes"}
         </button>
-        {state === "saved" && <span className="text-sm text-foreground/60">Saved</span>}
-        {state === "error" && <span className="text-sm text-red-400">Couldn&apos;t save notes. Try again.</span>}
+        <span role="status" aria-live="polite">
+          {state === "saved" && <span className="text-sm text-foreground/60">Saved</span>}
+          {state === "error" && <span className="text-sm text-red-400">Couldn&apos;t save notes. Try again.</span>}
+        </span>
       </div>
     </div>
   );
