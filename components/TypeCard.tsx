@@ -30,10 +30,10 @@ export default function TypeCard({
 }: TypeCardProps) {
   return (
     <div className="bg-[#242428] rounded-lg p-4 border border-zinc-700 hover:border-accent transition">
-      <div className="flex items-center justify-between mb-3">
-        <h3 className="text-white font-semibold text-lg">{name}</h3>
+      <div className="flex items-center justify-between gap-2 mb-3">
+        <h3 className="text-white font-semibold text-lg wrap-break-word">{name}</h3>
         <span
-          className={`text-xs px-2 py-1 rounded ${
+          className={`shrink-0 text-xs px-2 py-1 rounded ${
             status === "Active" ? "bg-accent text-white" : "bg-zinc-600 text-zinc-300"
           }`}
         >

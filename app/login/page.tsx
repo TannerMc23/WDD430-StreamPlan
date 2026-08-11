@@ -9,24 +9,33 @@ export default function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
 
+  const inputClass = (field: string) =>
+    `w-full p-2 rounded bg-[#1a1a1e] text-white border focus:outline-none ${
+      fieldErrors[field] ? "border-red-500 focus:border-red-500" : "border-zinc-700 focus:border-accent"
+    }`;
+
   const validate = () => {
-    if (!email.trim()) return "Email is required.";
-    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return "Enter a valid email address.";
-    if (!password) return "Password is required.";
-    if (password.length < 6) return "Password must be at least 6 characters.";
-    return "";
+    const errors: Record<string, string> = {};
+    if (!email.trim()) errors.email = "Email is required.";
+    else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) errors.email = "Enter a valid email address.";
+    if (!password) errors.password = "Password is required.";
+    else if (password.length < 6) errors.password = "Password must be at least 6 characters.";
+    return errors;
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    const validationError = validate();
-    if (validationError) {
-      setError(validationError);
+    const validationErrors = validate();
+    if (Object.keys(validationErrors).length > 0) {
+      setFieldErrors(validationErrors);
+      setError("Please fix the highlighted fields.");
       return;
     }
 
+    setFieldErrors({});
     setIsSubmitting(true);
     setError("");
 
@@ -46,7 +55,7 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-background px-4">
+    <div className="min-h-screen flex items-start sm:items-center justify-center bg-background px-4 py-8">
       <form
         onSubmit={handleSubmit}
         className="bg-[#242428] p-6 sm:p-8 rounded-lg w-full max-w-sm"
@@ -62,36 +71,44 @@ export default function LoginPage() {
           </p>
         )}
 
-        <label htmlFor="email" className="block text-sm text-zinc-300 mb-1">
-          Email
-        </label>
-        <input
-          id="email"
-          type="email"
-          placeholder="you@example.com"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          className="w-full mb-4 p-2 rounded bg-[#1a1a1e] text-white border border-zinc-700 focus:border-accent focus:outline-none"
-          required
-        />
+        <div className="mb-4">
+          <label htmlFor="email" className="block text-sm text-zinc-300 mb-1">
+            Email
+          </label>
+          <input
+            id="email"
+            type="email"
+            placeholder="you@example.com"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            aria-invalid={!!fieldErrors.email}
+            className={inputClass("email")}
+            required
+          />
+          {fieldErrors.email && <p className="text-red-400 text-xs mt-1">{fieldErrors.email}</p>}
+        </div>
 
-        <label htmlFor="password" className="block text-sm text-zinc-300 mb-1">
-          Password
-        </label>
-        <input
-          id="password"
-          type="password"
-          placeholder="••••••••"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          className="w-full mb-6 p-2 rounded bg-[#1a1a1e] text-white border border-zinc-700 focus:border-accent focus:outline-none"
-          required
-        />
+        <div className="mb-6">
+          <label htmlFor="password" className="block text-sm text-zinc-300 mb-1">
+            Password
+          </label>
+          <input
+            id="password"
+            type="password"
+            placeholder="••••••••"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            aria-invalid={!!fieldErrors.password}
+            className={inputClass("password")}
+            required
+          />
+          {fieldErrors.password && <p className="text-red-400 text-xs mt-1">{fieldErrors.password}</p>}
+        </div>
 
         <button
           type="submit"
           disabled={isSubmitting}
-          className="w-full bg-accent text-white py-2 rounded font-medium hover:bg-blue-400 transition disabled:opacity-50 disabled:cursor-not-allowed"
+          className="w-full min-h-11 bg-accent text-white py-2 rounded font-medium hover:bg-blue-400 transition disabled:opacity-50 disabled:cursor-not-allowed"
         >
           {isSubmitting ? "Logging in..." : "Log In"}
         </button>

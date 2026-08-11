@@ -11,14 +11,22 @@ export default function TypeForm() {
     const [notes, setNotes] = useState("");
     const [status, setStatus] = useState<"Active" | "Retired">("Active");
     const [error, setError] = useState("");
+    const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
     const [isSubmitting, setIsSubmitting] = useState(false);
+
+    const inputClass = (field: string) =>
+        `w-full p-2 rounded bg-[#1a1a1e] text-white border focus:outline-none ${
+            fieldErrors[field] ? "border-red-500 focus:border-red-500" : "border-zinc-700 focus:border-accent"
+        }`;
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         setError("");
+        setFieldErrors({});
 
         if (!name.trim()) {
-            setError("Name is required.");
+            setFieldErrors({ name: "Name is required." });
+            setError("Please fix the highlighted fields.");
             return;
         }
 
@@ -65,19 +73,21 @@ export default function TypeForm() {
                 </p>
             )}
 
-            <label htmlFor="id" className="block text-sm text-zinc-300 mb-1">
-                ID <span className="text-zinc-500">(leave blank to create new, fill in to edit)</span>
-            </label>
-            <input
-                id="id"
-                type="text"
-                value={id}
-                onChange={(e) => setId(e.target.value)}
-                className="w-full mb-4 p-2 rounded bg-[#1a1a1e] text-white border border-zinc-700 focus:border-accent focus:outline-none"
-            />
+            <div className="mb-4">
+                <label htmlFor="id" className="block text-sm text-zinc-300 mb-1">
+                    ID <span className="text-zinc-500">(leave blank to create new, fill in to edit)</span>
+                </label>
+                <input
+                    id="id"
+                    type="text"
+                    value={id}
+                    onChange={(e) => setId(e.target.value)}
+                    className={inputClass("id")}
+                />
+            </div>
 
             {!id.trim() && (
-                <>
+                <div className="mb-4">
                     <label htmlFor="userId" className="block text-sm text-zinc-300 mb-1">
                         User ID
                     </label>
@@ -86,54 +96,61 @@ export default function TypeForm() {
                         type="text"
                         value={userId}
                         onChange={(e) => setUserId(e.target.value)}
-                        className="w-full mb-4 p-2 rounded bg-[#1a1a1e] text-white border border-zinc-700 focus:border-accent focus:outline-none"
+                        className={inputClass("userId")}
                     />
-                </>
+                </div>
             )}
 
-            <label htmlFor="name" className="block text-sm text-zinc-300 mb-1">
-                Name
-            </label>
-            <input
-                id="name"
-                type="text"
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-                className="w-full mb-4 p-2 rounded bg-[#1a1a1e] text-white border border-zinc-700 focus:border-accent focus:outline-none"
-                required
-            />
+            <div className="mb-4">
+                <label htmlFor="name" className="block text-sm text-zinc-300 mb-1">
+                    Name
+                </label>
+                <input
+                    id="name"
+                    type="text"
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
+                    aria-invalid={!!fieldErrors.name}
+                    className={inputClass("name")}
+                    required
+                />
+                {fieldErrors.name && <p className="text-red-400 text-xs mt-1">{fieldErrors.name}</p>}
+            </div>
 
-            <label htmlFor="notes" className="block text-sm text-zinc-300 mb-1">
-                Notes
-            </label>
-            <textarea
-                id="notes"
-                value={notes}
-                onChange={(e) => setNotes(e.target.value)}
-                rows={3}
-                className="w-full mb-4 p-2 rounded bg-[#1a1a1e] text-white border border-zinc-700 focus:border-accent focus:outline-none"
-            />
+            <div className="mb-4">
+                <label htmlFor="notes" className="block text-sm text-zinc-300 mb-1">
+                    Notes
+                </label>
+                <textarea
+                    id="notes"
+                    value={notes}
+                    onChange={(e) => setNotes(e.target.value)}
+                    rows={3}
+                    className={inputClass("notes")}
+                />
+            </div>
 
-            <label htmlFor="status" className="block text-sm text-zinc-300 mb-1">
-                Status
-            </label>
-            <select
-                id="status"
-                value={status}
-                onChange={(e) => setStatus(e.target.value as "Active" | "Retired")}
-                className="w-full mb-6 p-2 rounded bg-[#1a1a1e] text-white border border-zinc-700 focus:border-accent focus:outline-none"
-            >
-                <option value="Active">Active</option>
-                <option value="Retired">Retired</option>
-            </select>
+            <div className="mb-6">
+                <label htmlFor="status" className="block text-sm text-zinc-300 mb-1">
+                    Status
+                </label>
+                <select
+                    id="status"
+                    value={status}
+                    onChange={(e) => setStatus(e.target.value as "Active" | "Retired")}
+                    className={inputClass("status")}
+                >
+                    <option value="Active">Active</option>
+                    <option value="Retired">Retired</option>
+                </select>
+            </div>
 
             <button
                 type="submit"
                 disabled={isSubmitting}
-                className="w-full bg-accent text-white py-2 rounded font-medium hover:bg-blue-400 transition disabled:opacity-50"
+                className="w-full min-h-11 bg-accent text-white py-2 rounded font-medium hover:bg-blue-400 transition disabled:opacity-50"
             >
                 {isSubmitting ? "Saving..." : id.trim() ? "Update Type" : "Create Type"}
-                
             </button>
         </form>
     );
