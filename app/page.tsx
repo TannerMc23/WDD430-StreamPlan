@@ -7,7 +7,7 @@ export default function Home() {
             Welcome to StreamPlan!
           </h1>
           <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Get started by logging in or creating an account. You can keep track of your streams and how you want them to go all in one place.
+            To get started, log in or create an account. You can keep track of your streams and how you want them to go all in one place.
           </p>
         </div>
       </main>
