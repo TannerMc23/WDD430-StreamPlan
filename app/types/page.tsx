@@ -1,4 +1,6 @@
 import TypeCard from "@/components/TypeCard";
+import { pool } from "@/lib/db";
+import Link from "next/link";
 
 interface StreamType {
   id: number;
@@ -8,11 +10,10 @@ interface StreamType {
 }
 
 async function getTypes(): Promise<StreamType[]> {
-  const res = await fetch("http://localhost:3000/api/type", {
-    cache: "no-store",
-  });
-  if (!res.ok) return [];
-  return res.json();
+  const { rows } = await pool.query<StreamType>(
+    "SELECT * FROM types ORDER BY id DESC"
+  );
+  return rows;
 }
 
 export default async function TypesPage() {
@@ -25,14 +26,18 @@ export default async function TypesPage() {
           Your Types
         </h1>
 
+        <Link href="/types/add-edit" className="text-accent hover:underline text-sm">
+          + Add New Type
+        </Link>
+
         {types.length === 0 ? (
-          <div className="text-center py-12 px-4 border border-dashed border-zinc-700 rounded-lg">
+          <div className="mt-4 text-center py-12 px-4 border border-dashed border-zinc-700 rounded-lg">
             <p className="text-zinc-400 text-sm sm:text-base">
               No types yet. Add your first game, chatting session, or other content type to get started.
             </p>
           </div>
         ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
+          <div className="mt-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
             {types.map((type) => (
               <TypeCard
                 key={type.id}

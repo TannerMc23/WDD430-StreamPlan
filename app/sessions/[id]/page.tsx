@@ -6,10 +6,13 @@ export const dynamic = "force-dynamic";
 
 type Params = { params: Promise<{ id: string }> };
 
-async function getSession(id: string): Promise<SessionRow | null> {
+async function getSession(id: string): Promise<(SessionRow & { type_name: string | null }) | null> {
   await ensureSchema();
-  const result = await pool.query<SessionRow>(
-    "SELECT * FROM sessions WHERE id = $1",
+  const result = await pool.query<SessionRow & { type_name: string | null }>(
+    `SELECT sessions.*, types.name AS type_name
+     FROM sessions
+     LEFT JOIN types ON sessions.type_id = types.id
+     WHERE sessions.id = $1`,
     [id]
   );
   return result.rows[0] ?? null;
@@ -19,7 +22,7 @@ export default async function SessionDetailPage({ params }: Params) {
   // TODO: filter by the authenticated user once lib/auth.ts is merged.
   const { id } = await params;
 
-  let session: SessionRow | null = null;
+  let session: (SessionRow & { type_name: string | null }) | null = null;
   let dbAvailable = true;
 
   try {
@@ -52,6 +55,9 @@ export default async function SessionDetailPage({ params }: Params) {
           </span>
         </div>
         <p className="mt-1 text-sm text-foreground/70">{date}</p>
+        {session.type_name && (
+          <p className="mt-1 text-sm text-foreground/70">Type: {session.type_name}</p>
+        )}
 
         <SessionNotesForm sessionId={session.id} initialNotes={session.notes} />
       </div>
