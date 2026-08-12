@@ -11,13 +11,13 @@ export default function SessionCard({ session }: { session: SessionRow }) {
     >
       <div className="flex items-center justify-between gap-2">
         <h3 className="font-semibold wrap-break-word">{session.title}</h3>
-        <span className="shrink-0 rounded-full bg-white/10 px-2 py-0.5 text-xs uppercase">
+        <span className="shrink-0 rounded-full bg-[#313135] border border-white px-2 py-0.5 text-xs uppercase">
           {session.status}
         </span>
       </div>
-      <p className="mt-1 text-sm text-foreground/70">{date}</p>
+      <p className="mt-1 text-sm text-foreground">{date}</p>
       {session.notes && (
-        <p className="mt-2 text-sm text-foreground/80 line-clamp-2">{session.notes}</p>
+        <p className="mt-2 text-sm text-foreground line-clamp-2">{session.notes}</p>
       )}
     </Link>
   );
