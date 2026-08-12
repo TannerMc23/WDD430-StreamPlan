@@ -15,9 +15,9 @@ export default function SessionCard({ session }: { session: SessionRow }) {
           {session.status}
         </span>
       </div>
-      <p className="mt-1 text-sm text-foreground/70">{date}</p>
+      <p className="mt-1 text-sm text-foreground">{date}</p>
       {session.notes && (
-        <p className="mt-2 text-sm text-foreground/80 line-clamp-2">{session.notes}</p>
+        <p className="mt-2 text-sm text-foreground line-clamp-2">{session.notes}</p>
       )}
     </Link>
   );
