@@ -11,7 +11,7 @@ export default function SessionCard({ session }: { session: SessionRow }) {
     >
       <div className="flex items-center justify-between gap-2">
         <h3 className="font-semibold wrap-break-word">{session.title}</h3>
-        <span className="shrink-0 rounded-full bg-[#313135] border border-white px-2 py-0.5 text-xs uppercase">
+        <span className="shrink-0 rounded-full bg-black border border-white px-2 py-0.5 text-xs uppercase">
           {session.status}
         </span>
       </div>
