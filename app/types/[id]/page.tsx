@@ -1,4 +1,5 @@
 import { notFound } from "next/navigation";
+import { pool } from "@/lib/db";
 
 interface StreamType {
   id: number;
@@ -8,9 +9,11 @@ interface StreamType {
 }
 
 async function getType(id: string): Promise<StreamType | null> {
-  const res = await fetch(`http://localhost:3000/api/type/${id}`, { cache: "no-store" });
-  if (!res.ok) return null;
-  return res.json();
+  const { rows } = await pool.query<StreamType>(
+    "SELECT * FROM types WHERE id = $1",
+    [id]
+  );
+  return rows[0] ?? null;
 }
 
 export default async function TypeDetailPage({ params }: { params: Promise<{ id: string }> }) {
