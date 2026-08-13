@@ -50,13 +50,13 @@ export default async function SessionDetailPage({ params }: Params) {
       <div className="rounded-lg border border-white/10 bg-white/5 p-4">
         <div className="flex items-center justify-between gap-2">
           <h1 className="text-xl font-semibold wrap-break-word">{session.title}</h1>
-          <span className="shrink-0 rounded-full bg-white/10 px-2 py-0.5 text-xs uppercase">
+          <span className="shrink-0 rounded-full bg-black border border-white px-2 py-0.5 text-xs uppercase">
             {session.status}
           </span>
         </div>
-        <p className="mt-1 text-sm text-foreground/70">{date}</p>
+        <p className="mt-1 text-sm text-foreground">{date}</p>
         {session.type_name && (
-          <p className="mt-1 text-sm text-foreground/70">Type: {session.type_name}</p>
+          <p className="mt-1 text-sm text-foreground">Type: {session.type_name}</p>
         )}
 
         <SessionNotesForm sessionId={session.id} initialNotes={session.notes} />

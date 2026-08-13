@@ -22,11 +22,11 @@ export default async function SessionsPage() {
     <main className="mx-auto max-w-2xl p-6">
       <h1 className="mb-4 text-xl font-semibold">Sessions</h1>
       {!dbAvailable ? (
-        <p className="text-foreground/70">
+        <p className="text-foreground">
           Database is not connected yet. Set DATABASE_URL in .env.local to see sessions here.
         </p>
       ) : sessions.length === 0 ? (
-        <p className="text-foreground/70">
+        <p className="text-foreground">
           No sessions scheduled yet. Create one to get started.
         </p>
       ) : (

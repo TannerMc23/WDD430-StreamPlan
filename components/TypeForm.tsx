@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 
 export default function TypeForm() {
@@ -13,6 +13,43 @@ export default function TypeForm() {
     const [error, setError] = useState("");
     const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
     const [isSubmitting, setIsSubmitting] = useState(false);
+
+    useEffect(() => {
+        if (!id.trim()) {
+        setUserId("");
+        setName("");
+        setNotes("");
+        setStatus("Active");
+        return;
+        }
+
+        const fetchTypeData = async () => {
+        try {
+            setError("");
+            const res = await fetch(`/api/type/${id}`);
+
+            if (!res.ok) {
+            throw new Error("Type not found.");
+            }
+
+            const data = await res.json();
+
+            setUserId(data.userId || "");
+            setName(data.name || "");
+            setNotes(data.notes || "");
+            setStatus(data.status || "Active");
+
+        } catch (err: any) {
+            setError(err.message || "Failed to load type data.");
+        }
+        };
+
+        const delayDebounce = setTimeout(() => {
+        fetchTypeData();
+        }, 500);
+
+        return () => clearTimeout(delayDebounce);
+    }, [id]);
 
     const inputClass = (field: string) =>
         `w-full p-2 rounded bg-[#1a1a1e] text-white border focus:outline-none ${

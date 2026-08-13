@@ -11,10 +11,12 @@ interface NavLinkProps {
 
 function NavLink({ href, children }: NavLinkProps) {
   const pathname = usePathname();
-  const isActive = pathname === href;
+  const isActive = href === "/" 
+  ? pathname === "/" 
+  : pathname.startsWith(href);
 
   return (
-    <Link href={href} className={isActive ? "text-gray-300 underline" : "text-white hover:text-gray-500"}>
+    <Link href={href} className={isActive ? "text-white underline" : "text-white hover:text-gray-500"}>
       {children}
     </Link>
   );
@@ -31,6 +33,7 @@ export default function NavLinks({ user }: NavLinksProps) {
         <li><NavLink href="/">Home</NavLink></li>
         <li><NavLink href="/dashboard">Dashboard</NavLink></li>
         <li><NavLink href="/sessions">All Sessions</NavLink></li>
+        <li><NavLink href="/types">All Types</NavLink></li>
         {user ? (
           <li>
             <button onClick={() => signOut()} className="text-white hover:text-gray-500">

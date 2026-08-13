@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 
 export default function SessionForm() {
@@ -15,6 +15,54 @@ export default function SessionForm() {
   const [error, setError] = useState("");
   const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
+
+  useEffect(() => {
+    if (!id.trim()) {
+      setUserId("");
+      setTitle("");
+      setTypeId("");
+      setScheduledDate("");
+      setStatus("Planned");
+      setNotes("");
+      return;
+    }
+
+    const fetchSessionData = async () => {
+      try {
+        setError("");
+        const res = await fetch(`/api/sessions/${id}`);
+        
+        if (!res.ok) {
+          throw new Error("Session not found.");
+        }
+
+        const data = await res.json();
+
+        setUserId(data.userId || "");
+        setTitle(data.title || "");
+        setTypeId(data.typeId ? String(data.typeId) : "");
+        
+        if (data.scheduledDate) {
+          const formattedDate = new Date(data.scheduledDate).toISOString().slice(0, 16);
+          setScheduledDate(formattedDate);
+        } else {
+          setScheduledDate("");
+        }
+
+        setStatus(data.status || "Planned");
+        setNotes(data.notes || "");
+
+      } catch (err: any) {
+        setError(err.message || "Failed to load session data.");
+      }
+    };
+
+    const delayDebounce = setTimeout(() => {
+      fetchSessionData();
+    }, 500);
+
+    return () => clearTimeout(delayDebounce);
+  }, [id]);
 
   const inputClass = (field: string) =>
     `w-full p-2 rounded bg-[#1a1a1e] text-white border focus:outline-none ${
