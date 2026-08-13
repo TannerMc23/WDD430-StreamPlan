@@ -1,3 +1,5 @@
+import Link from "next/link";
+
 type Genre = "Games" | "Chatting" | "Music" | "IRL" | "Creative" | "Other";
 
 const genreStyles: Record<Genre, { color: string; label: string }> = {
@@ -27,55 +29,57 @@ export default function TypeCard({
   genres = [],
   onEdit,
   onDelete,
-}: TypeCardProps) {
+  }: TypeCardProps) {
   return (
-    <div className="bg-[#242428] rounded-lg p-4 border border-zinc-700 hover:border-accent transition">
-      <div className="flex items-center justify-between gap-2 mb-3">
-        <h3 className="text-white font-semibold text-lg wrap-break-word">{name}</h3>
-        <span
-          className={`shrink-0 text-xs px-2 py-1 rounded ${
-            status === "Active" ? "bg-accent text-white" : "bg-zinc-600 text-zinc-300"
-          }`}
-        >
-          {status}
-        </span>
-      </div>
-
-      {notes && (
-        <p className="text-zinc-400 text-sm mb-3 line-clamp-2">{notes}</p>
-      )}
-
-      {genres.length > 0 && (
-        <div className="flex flex-wrap gap-1 mb-3">
-          {genres.map((genre) => (
-            <span
-              key={genre}
-              className={`text-xs text-white px-2 py-0.5 rounded ${genreStyles[genre]?.color ?? "bg-zinc-600"}`}
-            >
-              {genreStyles[genre]?.label ?? genre}
-            </span>
-          ))}
+    <Link href={`/types/${id}`}>
+      <div className="bg-white/5 rounded-lg p-4 border border-zinc-700 hover:border-accent transition">
+        <div className="flex items-center justify-between gap-2 mb-3">
+          <h3 className="text-foreground font-semibold text-lg wrap-break-word">{name}</h3>
+          <span
+            className={`shrink-0 text-xs px-2 py-1 rounded ${
+              status === "Active" ? "bg-black text-foreground" : "bg-black text-white/50"
+            }`}
+          >
+            {status}
+          </span>
         </div>
-      )}
 
-      <div className="flex gap-2 mt-3">
-        {onEdit && (
-          <button
-            onClick={() => onEdit(id)}
-            className="text-sm text-accent hover:underline"
-          >
-            Edit
-          </button>
+        {notes && (
+          <p className="text-foreground text-sm mb-3 line-clamp-2">{notes}</p>
         )}
-        {onDelete && (
-          <button
-            onClick={() => onDelete(id)}
-            className="text-sm text-red-400 hover:underline"
-          >
-            Delete
-          </button>
+
+        {genres.length > 0 && (
+          <div className="flex flex-wrap gap-1 mb-3">
+            {genres.map((genre) => (
+              <span
+                key={genre}
+                className={`text-xs text-white px-2 py-0.5 rounded ${genreStyles[genre]?.color ?? "bg-zinc-600"}`}
+              >
+                {genreStyles[genre]?.label ?? genre}
+              </span>
+            ))}
+          </div>
         )}
+
+        <div className="flex gap-2 mt-3">
+          {onEdit && (
+            <button
+              onClick={() => onEdit(id)}
+              className="text-sm text-foreground hover:underline"
+            >
+              Edit
+            </button>
+          )}
+          {onDelete && (
+            <button
+              onClick={() => onDelete(id)}
+              className="text-sm text-red-400 hover:underline"
+            >
+              Delete
+            </button>
+          )}
+        </div>
       </div>
-    </div>
+    </Link>
   );
 }
