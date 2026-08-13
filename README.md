@@ -17,6 +17,11 @@ StreamPlan development follows the project constitution: strict TypeScript, Tail
 - **Database:** PostgreSQL (Neon)
 - **Deployment:** Vercel
 
+## Live Deployment
+https://wdd430-streamplan.vercel.app/
+
+Test account: sign up at `/signup`, or use `test1234@email.com` / `Test1234!`
+
 ## Getting Started
 
 ### Prerequisites
@@ -60,23 +65,26 @@ StreamPlan is deployed on Vercel. To deploy your own instance:
 
 1. Import the repo into Vercel.
 2. Connect a Neon Postgres database via the Vercel Storage tab (this auto-populates `DATABASE_URL`).
-3. Add `AUTH_SECRET` as an environment variable in the Vercel project settings.
+3. Add `AUTH_SECRET` as an environment variable in the Vercel project settings, scoped to Production.
 4. Deploy.
 
 ## Project Structure
 app/
 login/ — Login page
+signup/ — Signup page
 types/ — Type (content) library, list + detail views
+types/add-edit/ — Add/Edit Type form page
 sessions/ — Session planner, list + detail views
+sessions/add-edit/ — Add/Edit Session form page
 dashboard/ — Upcoming sessions overview
 api/
-auth/ — Auth.js route handler
+auth/ — Auth.js catch-all route + signup endpoint
 type/ — Type CRUD + genre filtering
 sessions/ — Session CRUD + notes
 dashboard/ — Upcoming sessions endpoint
-components/ — Shared UI (TypeCard, SessionCard, Navbar, StatusBadge, Modal, GenreFilter)
+components/ — Shared UI (TypeCard, SessionCard, TypeForm, SessionForm, NavBar/NavLinks, StatusBadge, Modal, GenreFilter)
 lib/ — Auth config, database connection/schema, shared TypeScript types
-middleware.ts — Route protection for authenticated pages
+proxy.ts — Route protection for authenticated pages (Node.js runtime)
 specs/ — Feature specification (Spec-Kit generated)
 
 ## API Endpoints
@@ -84,15 +92,14 @@ specs/ — Feature specification (Spec-Kit generated)
 | Method | Endpoint | Description |
 |---|---|---|
 | POST | `/api/auth/signup` | Create a new user account |
-| POST | `/api/auth/login` | Authenticate and create a session |
-| POST | `/api/auth/logout` | End the current session |
-| GET | `/api/type` | List all Types for the authenticated user |
+| * | `/api/auth/[...nextauth]` | Auth.js catch-all route — handles sign-in, sign-out, session, CSRF, and providers |
+| GET | `/api/type` | List all Types |
 | POST | `/api/type` | Create a new Type |
 | GET | `/api/type/:id` | Retrieve a specific Type |
 | PUT | `/api/type/:id` | Update a specific Type |
 | DELETE | `/api/type/:id` | Delete a specific Type |
 | GET | `/api/type/genre/:genre` | Filter Types by genre |
-| GET | `/api/sessions` | List all Sessions for the authenticated user |
+| GET | `/api/sessions` | List all Sessions |
 | POST | `/api/sessions` | Create a new Session |
 | GET | `/api/sessions/:id` | Retrieve a specific Session |
 | PUT | `/api/sessions/:id` | Update a specific Session |
@@ -103,4 +110,4 @@ specs/ — Feature specification (Spec-Kit generated)
 ## Known Issues / Future Work
 - Genre filtering currently matches on Type name rather than a real `genres`/`type_genres` join, pending seeded genre data
 - "Live now" status/display was discussed by the team but not yet implemented
-- Account management and Sign In/Sign Out links on the Navbar depending on auth status are planned but not yet built
+- An account management link on the Navbar is planned but not yet built
